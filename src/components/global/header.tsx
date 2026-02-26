@@ -2,9 +2,6 @@
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { toggleTheme, selectTheme } from "@/store/slices/themeSlice";
-import { resetFilters } from "@/store/slices/filterSlice";
-import { refreshData } from "@/store/slices/leadPerformanceSlice";
-import { refreshInventory } from "@/store/slices/inventorySlice";
 import { Button } from "@/components/ui/button";
 import {
   RefreshCw,
@@ -14,6 +11,7 @@ import {
   BarChart3,
   Users,
   LogOut,
+  Home,
 } from "lucide-react";
 
 import {
@@ -21,52 +19,31 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-
-import { exportToCSV } from "@/lib/exportUtils";
-import { selectLeadPerformanceData } from "@/store/slices/leadPerformanceSlice";
-import { selectInventoryData } from "@/store/slices/inventorySlice";
-import { getFilteredLeadData } from "@/data/lead-performance";
 import { selectFilters } from "@/store/slices/filterSlice";
-import { selectActiveTab } from "@/store/slices/uiSlice";
 import { useRouter } from "next/navigation";
 import { clearSession } from "@/utils/storage";
+import { useEffect, useState } from "react";
 
 export function Header() {
   const dispatch = useAppDispatch();
   const theme = useAppSelector(selectTheme);
-  const activeTab = useAppSelector(selectActiveTab);
-  const leadData = useAppSelector(selectLeadPerformanceData);
-  const inventoryData = useAppSelector(selectInventoryData);
-  const filters = useAppSelector(selectFilters);
   const router = useRouter();
+  const [userInitials, setUserInitials] = useState("U");
 
-  // 👇 Replace this with real user name from store / session
-  const userName = "Amit Bohra";
-  const userInitials = userName
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
 
-  const handleRefresh = () => {
-    dispatch(resetFilters());
-    if (activeTab === "lead-performance") {
-      dispatch(refreshData());
-    } else {
-      dispatch(refreshInventory());
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+
+      const initials = `${parsedUser.firstname?.[0] ?? ""}${
+        parsedUser.lastname?.[0] ?? ""
+      }`.toUpperCase();
+
+      setUserInitials(initials);
     }
-  };
-
-  const handleExport = () => {
-    if (activeTab === "lead-performance") {
-      const filteredData = getFilteredLeadData(filters);
-      exportToCSV(filteredData, "lead-performance");
-    } else {
-      exportToCSV(inventoryData, "inventory-overview");
-    }
-  };
+  }, []);
 
   const handleThemeToggle = () => {
     dispatch(toggleTheme());
@@ -86,27 +63,36 @@ export function Header() {
               <BarChart3 className="size-5" />
             </div>
             <h1 className="text-xl font-semibold text-foreground">
-              Analytics Dashboard
+              Lead Boost
             </h1>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-           <Button
-            variant="default"
+          <Button
+            variant="custom"
+            size="icon"
+            title="Dashboard"
+            className="border border-border bg-primary/40 text-muted dark:text-foreground rounded-lg"
+            onClick={() => router.push("/dashboard")}
+          >
+            <Home className="size-5" />
+          </Button>
+          <Button
+            variant="custom"
             size="icon"
             title="User management"
-            className="border border-border rounded-lg"
+            className="border border-border bg-primary/40 text-muted dark:text-foreground rounded-lg"
             onClick={() => router.push("/user-management")}
           >
             <Users className="size-5" />
           </Button>
           <Button
-            variant="default"
+            variant="custom"
             size="icon"
             onClick={handleThemeToggle}
             title="Toggle theme"
-            className="border border-border rounded-lg"
+            className="border border-border bg-primary/40 text-muted dark:text-foreground rounded-lg"
           >
             {theme === "light" ? (
               <Moon className="size-5" />
@@ -118,25 +104,14 @@ export function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="default"
-                className="h-9 w-9 rounded-lg font-semibold"
+                variant="custom"
+                className="h-9 w-9 rounded-lg bg-primary/40 text-muted dark:text-foreground font-semibold"
               >
                 {userInitials}
               </Button>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem onClick={handleRefresh}>
-                <RefreshCw className="mr-2 size-4" />
-                Refresh
-              </DropdownMenuItem>
-
-              <DropdownMenuItem onClick={handleExport}>
-                <Download className="mr-2 size-4" />
-                Download
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={logOut}
                 className="text-red-500 focus:text-red-500"

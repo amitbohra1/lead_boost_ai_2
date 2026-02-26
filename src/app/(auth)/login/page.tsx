@@ -27,30 +27,29 @@ export default function Login() {
     setError,
   } = useForm<LoginFormValues>();
 
-  const onSubmit = async (data: LoginFormValues) => {
-    try {
-      const res = await loginApi(data);
+ const onSubmit = async (data: LoginFormValues) => {
+  try {
+    const res = await loginApi(data);
 
-      dispatch(
-        setUser({
-          firstname: res.firstName,
-          lastname: res.lastName,
-        })
-      );
+    const userData = {
+      firstname: res.firstName,
+      lastname: res.lastName,
+    };
 
-      if (res.token) {
-        dispatch(setApiToken(res.token));
-      }
+    localStorage.setItem("user", JSON.stringify(userData));
 
-      toast.success("Login successfully");
-      router.push("/dashboard");
-    } catch (error) {
-      setError("root", {
-        message: "Invalid email or password",
-      });
+    if (res.token) {
+      dispatch(setApiToken(res.token));
     }
-  };
 
+    toast.success("Login successfully");
+    router.push("/dashboard");
+  } catch (error) {
+    setError("root", {
+      message: "Invalid email or password",
+    });
+  }
+};
   return (
     <div className="min-h-screen flex w-full items-center justify-center bg-background relative overflow-hidden">
       

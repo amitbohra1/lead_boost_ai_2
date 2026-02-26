@@ -73,7 +73,7 @@ export function Header() {
             variant="custom"
             size="icon"
             title="Dashboard"
-            className="border border-border bg-primary/40 text-muted dark:text-foreground rounded-lg"
+            className="border border-border bg-primary/50 text-muted dark:text-foreground rounded-lg"
             onClick={() => router.push("/dashboard")}
           >
             <Home className="size-5" />
@@ -82,7 +82,7 @@ export function Header() {
             variant="custom"
             size="icon"
             title="User management"
-            className="border border-border bg-primary/40 text-muted dark:text-foreground rounded-lg"
+            className="border border-border bg-primary/50 text-muted dark:text-foreground rounded-lg"
             onClick={() => router.push("/user-management")}
           >
             <Users className="size-5" />
@@ -92,7 +92,7 @@ export function Header() {
             size="icon"
             onClick={handleThemeToggle}
             title="Toggle theme"
-            className="border border-border bg-primary/40 text-muted dark:text-foreground rounded-lg"
+            className="border border-border bg-primary/50 text-muted dark:text-foreground rounded-lg"
           >
             {theme === "light" ? (
               <Moon className="size-5" />
@@ -105,7 +105,7 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="custom"
-                className="h-9 w-9 rounded-lg bg-primary/40 text-muted dark:text-foreground font-semibold"
+                className="h-9 w-9 rounded-lg bg-primary/50 text-muted dark:text-foreground font-semibold"
               >
                 {userInitials}
               </Button>

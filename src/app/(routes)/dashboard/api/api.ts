@@ -210,3 +210,22 @@ export const useGetInventoryOverview = (
     retry: 1,
   });
 };
+
+export const useGetDemandCount = () => {
+  return useQuery({
+    queryKey: ["demand-count"],
+    queryFn: async () => {
+      const response = await apicall("get", "/dashboard/demand_count", {})
+
+      const demandData = response.data.response.demand_count
+
+      const weeks = demandData.map((item: any) => item.label)
+      const highDemand = demandData.map((item: any) => item.high_demand_pct)
+      const lowDemand = demandData.map((item: any) => item.low_demand_pct)
+
+      return { weeks, highDemand, lowDemand }
+    },
+    refetchOnWindowFocus: false,
+    retry: 1,
+  })
+}

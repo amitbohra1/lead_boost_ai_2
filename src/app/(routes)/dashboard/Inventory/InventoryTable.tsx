@@ -13,7 +13,14 @@ import {
 } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { ArrowUpDown, Search, TrendingUp, TrendingDown } from "lucide-react";
+import {
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  Search,
+  TrendingUp,
+  TrendingDown,
+} from "lucide-react";
 
 interface ApiInventoryItem {
   stock: string;
@@ -76,108 +83,39 @@ export function InventoryTable({ data }: InventoryTableProps) {
     () => [
       {
         accessorKey: "carName",
-        header: ({ column }) => (
-          <div
-            className="flex cursor-pointer items-center gap-2"
-            onClick={() => column.toggleSorting()}
-          >
-            Car Name
-            <ArrowUpDown className="size-3" />
-          </div>
-        ),
-        cell: ({ row }) => (
-          <span className="font-medium">{row.getValue("carName")}</span>
-        ),
+        header: "Car Name",
       },
       {
         accessorKey: "purchasePrice",
         header: "Purchase Price",
-        cell: ({ row }) => (
-          <div className="text-right">
-            ${Number(row.getValue("purchasePrice")).toLocaleString()}
-          </div>
-        ),
       },
       {
         accessorKey: "currentPrice",
         header: "Current Price",
-        cell: ({ row }) => (
-          <div className="text-right">
-            ${Number(row.getValue("currentPrice")).toLocaleString()}
-          </div>
-        ),
       },
       {
         accessorKey: "daysUnsold",
         header: "Days Unsold",
-        cell: ({ row }) => (
-          <div className="text-right">{row.getValue("daysUnsold")} days</div>
-        ),
       },
       {
         accessorKey: "avgLeadsPerDay",
         header: "Avg Leads/Day",
-        cell: ({ row }) => (
-          <div className="text-right">{row.getValue("avgLeadsPerDay")}</div>
-        ),
       },
       {
         accessorKey: "totalLeads",
         header: "Total Leads",
-        cell: ({ row }) => (
-          <div className="text-right">{row.getValue("totalLeads")}</div>
-        ),
       },
       {
         accessorKey: "trend",
         header: "Trend",
-        cell: ({ row }) => {
-          const trend = row.getValue("trend") as string;
-
-          return (
-            <div className="text-center">
-              {trend === "Up" ? (
-                <Badge className="bg-success/10 text-success border-success/20">
-                  <TrendingUp className="mr-1 h-3 w-3" />
-                  Up
-                </Badge>
-              ) : (
-                <Badge className="bg-destructive/10 text-destructive border-destructive/20">
-                  <TrendingDown className="mr-1 h-3 w-3" />
-                  Down
-                </Badge>
-              )}
-            </div>
-          );
-        },
       },
       {
         accessorKey: "demand",
         header: "Demand",
-        cell: ({ row }) => {
-          const demand = row.getValue("demand") as string;
-
-          return (
-            <Badge
-              className={
-                demand === "High"
-                  ? "bg-success/10 text-success border-success/20"
-                  : "bg-warning/10 text-warning border-warning/20"
-              }
-            >
-              {demand}
-            </Badge>
-          );
-        },
       },
       {
         accessorKey: "aiSuggestion",
         header: "AI Suggestion",
-        cell: ({ row }) => (
-          <div className="max-w-xs text-sm text-muted-foreground">
-            {row.getValue("aiSuggestion")}
-          </div>
-        ),
       },
     ],
     [],
@@ -190,13 +128,11 @@ export function InventoryTable({ data }: InventoryTableProps) {
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     onPaginationChange: setPagination,
-
     globalFilterFn: (row, _, filterValue) =>
       Object.values(row.original)
         .join(" ")
         .toLowerCase()
         .includes(filterValue.toLowerCase()),
-
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -204,9 +140,10 @@ export function InventoryTable({ data }: InventoryTableProps) {
   });
 
   return (
-    <div className="h-screen">
+    <div className="w-full h-screen">
+      {/* SEARCH */}
       <div className="border-b border-border bg-muted/20 p-4">
-        <div className="relative">
+        <div className="relative max-w-sm">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search vehicles..."
@@ -217,57 +154,111 @@ export function InventoryTable({ data }: InventoryTableProps) {
         </div>
       </div>
 
-      <div className="px-3 py-6">
+      <div className="px-3 py-4">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Vehicle Inventory Details</h2>
+          <h2 className="text-lg font-semibold">
+            Vehicle Inventory Details
+          </h2>
           <p className="text-sm text-muted-foreground">
-            {table.getRowModel().rows.length} vehicles
+            {table.getFilteredRowModel().rows.length} vehicles
           </p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            {/* HEADER */}
-            <thead className="bg-muted/50 table w-full table-fixed">
+        {/* TABLE */}
+        <div className="w-full overflow-x-auto">
+          <div className="max-h-[500px] overflow-y-auto border rounded-md">
+          <table className="min-w-max border-collapse w-full">
+            <thead className="bg-muted sticky top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
+                  {headerGroup.headers.map((header) => {
+                    const isSorted = header.column.getIsSorted();
+
+                    return (
+                      <th
+                        key={header.id}
+                        onClick={header.column.getToggleSortingHandler()}
+                        className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground cursor-pointer select-none whitespace-nowrap"
+                      >
+                        <div className="flex items-center gap-2">
+                          {flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
                           )}
-                    </th>
-                  ))}
+
+                          {isSorted === "asc" && (
+                            <ArrowUp className="h-3 w-3" />
+                          )}
+                          {isSorted === "desc" && (
+                            <ArrowDown className="h-3 w-3" />
+                          )}
+                          {!isSorted && (
+                            <ArrowUpDown className="h-3 w-3 opacity-50" />
+                          )}
+                        </div>
+                      </th>
+                    );
+                  })}
                 </tr>
               ))}
             </thead>
 
-            {/* SCROLLABLE BODY */}
-            <tbody className="block max-h-[450px] overflow-y-auto w-full divide-y divide-border">
+            <tbody className="divide-y divide-border overflow-auto max-h-[450px]">
               {table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
-                    className="table w-full table-fixed hover:bg-muted/30"
+                    className="hover:bg-muted/30"
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="px-4 py-2">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </td>
-                    ))}
+                    {row.getVisibleCells().map((cell) => {
+                      const value = cell.getValue();
+
+                      return (
+                        <td
+                          key={cell.id}
+                          className="px-4 py-2 whitespace-nowrap"
+                        >
+                          {cell.column.id === "purchasePrice" ||
+                          cell.column.id === "currentPrice" ? (
+                            `$${Number(value).toLocaleString()}`
+                          ) : cell.column.id === "trend" ? (
+                            value === "Up" ? (
+                              <Badge className="bg-success/10 text-success border-success/20">
+                                <TrendingUp className="mr-1 h-3 w-3" />
+                                Up
+                              </Badge>
+                            ) : (
+                              <Badge className="bg-destructive/10 text-destructive border-destructive/20">
+                                <TrendingDown className="mr-1 h-3 w-3" />
+                                Down
+                              </Badge>
+                            )
+                          ) : cell.column.id === "demand" ? (
+                            <Badge
+                              className={
+                                value === "High"
+                                  ? "bg-success/10 text-success border-success/20"
+                                  : "bg-warning/10 text-warning border-warning/20"
+                              }
+                            >
+                              {value as string}
+                            </Badge>
+                          ) : (
+                           <span className="whitespace-nowrap">
+                              {flexRender(
+                                cell.column.columnDef.cell ??
+                                  (() => value as string),
+                                cell.getContext(),
+                              )}
+                            </span>
+                          )}
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))
               ) : (
-                <tr className="table w-full">
+                <tr>
                   <td
                     colSpan={columns.length}
                     className="py-12 text-center text-muted-foreground"
@@ -278,31 +269,32 @@ export function InventoryTable({ data }: InventoryTableProps) {
               )}
             </tbody>
           </table>
+        </div>
+        </div>
 
-          {/* PAGINATION (outside scroll) */}
-          <div className="my-3 px-3 flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </div>
+        {/* PAGINATION */}
+        <div className="mt-4 flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">
+            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                className="rounded-md border px-3 py-1 text-sm disabled:opacity-50"
-              >
-                Previous
-              </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="rounded-md border px-3 py-1 text-sm disabled:opacity-50"
+            >
+              Previous
+            </button>
 
-              <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                className="rounded-md border px-3 py-1 text-sm disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
+            <button
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="rounded-md border px-3 py-1 text-sm disabled:opacity-50"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>

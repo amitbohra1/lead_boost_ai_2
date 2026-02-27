@@ -36,13 +36,7 @@ const filterSlice = createSlice({
     setLeadsPerDay: (state, action) => {
       state.leads_per_day  = action.payload
     },
-    resetFilters: (state) => {
-      state.body_type = ""
-      state.demand_level = ""
-      state.vin = ""
-      state.store = ""
-      state.leads_per_day = ""
-    },
+    resetFilters: () => initialState,
   },
 })
 

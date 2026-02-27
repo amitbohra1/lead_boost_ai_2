@@ -4,7 +4,6 @@ import { LeadFilters } from "./Filters/LeadFilters";
 // import { InventoryFilters } from "./Filters/InventoryFilters";
 import { LeadStatsCards } from "./Lead/LeadStatsCards";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { selectActiveTab } from "@/store/slices/uiSlice";
 import { DashboardTabs } from "./Tabs/DashboardTabs";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +11,7 @@ import {
   useApplyFilters,
   useGetFilter,
 } from "./api/api";
-import { selectFilters } from "@/store/slices/filterSlice";
+import { resetFilters, selectFilters } from "@/store/slices/filterSlice";
 import { setLeadFilterData } from "@/store/slices/leadSlice";
 import { useEffect, useState } from "react";
 import { aesDecrypt } from "@/app/(auth)/crypto";
@@ -21,7 +20,6 @@ import { setFeatures } from "@/store/redux/featureSlice";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function DashboardPage() {
-  // const activeTab = useAppSelector(selectActiveTab);
   const filters = useAppSelector(selectFilters);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
@@ -92,13 +90,15 @@ export default function DashboardPage() {
     });
   };
 
+  const handleClearFilters = () => {
+  dispatch(resetFilters());
+};
+
   const finalData = appliedData || defaultData;
   const isLoading = isApplying || isDefaultLoading;
   if (loading) {
     return (
       <div className="flex flex-1 items-center justify-center h-screen">
-        {/* <Spinner className="text-primary h-10 w-10" /> */}
-
         <Spinner />
       </div>
     );
@@ -111,16 +111,16 @@ export default function DashboardPage() {
             <h2 className="text-lg font-semibold text-card-foreground">
               Filters
             </h2>
+            <div className="flex gap-2">
+            <Button variant={"default"} onClick={handleClearFilters}>
+              Clear
+            </Button>
             <Button variant={"default"} onClick={handleApplyFilters}>
               Apply
             </Button>
+            </div>
           </div>
           <LeadFilters />
-          {/* {activeTab === "lead-performance" ? (
-           
-          ) : (
-            <InventoryFilters /> */}
-          {/* )} */}
         </div>
 
         <LeadStatsCards data={finalData} isLoading={isLoading} />

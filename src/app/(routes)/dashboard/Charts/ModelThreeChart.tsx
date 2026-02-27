@@ -69,8 +69,11 @@ export function ModelThreeChart() {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-background p-4">
-      <HighchartsReact highcharts={Highcharts} options={options} />
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold text-card-foreground">Performance</h2>
+      <div className="rounded-lg border border-border bg-background p-4">
+        <HighchartsReact highcharts={Highcharts} options={options} />
+      </div>
     </div>
   );
 }

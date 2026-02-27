@@ -67,19 +67,19 @@ const {
       />
 
       <StatCard
+        title="Overall Avg / Day"
+        value={overallMetrics?.overall_avg_leads?.toLocaleString() || 0}
+        // subtitle={`Avg Leads: ${overallMetrics?.overall_avg_leads || 0}`}
+        icon={TrendingUp}
+        colorScheme="secondary"
+      />
+
+      <StatCard
         title="Action Items"
         value="--"
         subtitle="Require price adjustment"
         icon={AlertCircle}
         colorScheme="warning"
-      />
-
-       <StatCard
-        title="Overall Metrics"
-        value={overallMetrics?.overall_leads?.toLocaleString() || 0}
-        subtitle={`Avg Leads: ${overallMetrics?.overall_avg_leads || 0}`}
-        icon={TrendingUp}
-        colorScheme="secondary"
       />
     </div>
   );

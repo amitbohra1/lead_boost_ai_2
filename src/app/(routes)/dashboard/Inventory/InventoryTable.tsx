@@ -76,7 +76,7 @@ export function InventoryTable({ data }: InventoryTableProps) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 25,
+    pageSize: 50,
   });
 
   const columns = useMemo<ColumnDef<Inventory>[]>(
@@ -138,12 +138,11 @@ export function InventoryTable({ data }: InventoryTableProps) {
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
-
   return (
-    <div className="w-full h-screen">
+    <div className="w-full">
       {/* SEARCH */}
       <div className="border-b border-border bg-muted/20 p-4">
-        <div className="relative max-w-sm">
+        <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search vehicles..."
@@ -156,19 +155,16 @@ export function InventoryTable({ data }: InventoryTableProps) {
 
       <div className="px-3 py-4">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">
-            Vehicle Inventory Details
-          </h2>
+          <h2 className="text-lg font-semibold">Vehicle Inventory Details</h2>
           <p className="text-sm text-muted-foreground">
             {table.getFilteredRowModel().rows.length} vehicles
           </p>
         </div>
 
         {/* TABLE */}
-        <div className="w-full overflow-x-auto">
-          <div className="max-h-[500px] overflow-y-auto border rounded-md">
+        <div className="w-full max-h-[70vh] overflow-auto border rounded-md">
           <table className="min-w-max border-collapse w-full">
-            <thead className="bg-muted sticky top-0 z-10">
+            <thead className="bg-muted">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
@@ -203,13 +199,10 @@ export function InventoryTable({ data }: InventoryTableProps) {
               ))}
             </thead>
 
-            <tbody className="divide-y divide-border overflow-auto max-h-[450px]">
+            <tbody className="divide-y divide-border">
               {table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="hover:bg-muted/30"
-                  >
+                  <tr key={row.id} className="hover:bg-muted/30">
                     {row.getVisibleCells().map((cell) => {
                       const value = cell.getValue();
 
@@ -219,39 +212,13 @@ export function InventoryTable({ data }: InventoryTableProps) {
                           className="px-4 py-2 whitespace-nowrap"
                         >
                           {cell.column.id === "purchasePrice" ||
-                          cell.column.id === "currentPrice" ? (
-                            `$${Number(value).toLocaleString()}`
-                          ) : cell.column.id === "trend" ? (
-                            value === "Up" ? (
-                              <Badge className="bg-success/10 text-success border-success/20">
-                                <TrendingUp className="mr-1 h-3 w-3" />
-                                Up
-                              </Badge>
-                            ) : (
-                              <Badge className="bg-destructive/10 text-destructive border-destructive/20">
-                                <TrendingDown className="mr-1 h-3 w-3" />
-                                Down
-                              </Badge>
-                            )
-                          ) : cell.column.id === "demand" ? (
-                            <Badge
-                              className={
-                                value === "High"
-                                  ? "bg-success/10 text-success border-success/20"
-                                  : "bg-warning/10 text-warning border-warning/20"
-                              }
-                            >
-                              {value as string}
-                            </Badge>
-                          ) : (
-                           <span className="whitespace-nowrap">
-                              {flexRender(
+                          cell.column.id === "currentPrice"
+                            ? `$${Number(value).toLocaleString()}`
+                            : flexRender(
                                 cell.column.columnDef.cell ??
                                   (() => value as string),
                                 cell.getContext(),
                               )}
-                            </span>
-                          )}
                         </td>
                       );
                     })}
@@ -269,7 +236,6 @@ export function InventoryTable({ data }: InventoryTableProps) {
               )}
             </tbody>
           </table>
-        </div>
         </div>
 
         {/* PAGINATION */}

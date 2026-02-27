@@ -63,7 +63,7 @@ export function Header() {
               <BarChart3 className="size-5" />
             </div>
             <h1 className="text-xl font-semibold text-foreground">
-              Lead Boost
+              LeadBoostAI
             </h1>
           </div>
         </div>

@@ -61,7 +61,6 @@ export function LeadChart() {
           ).toLocaleDateString();
 
           return `
-            <b>${point.x}</b><br/>
             Date: ${formattedDate}<br/>
             Leads: <b>${point.y}</b>
           `;
@@ -85,7 +84,7 @@ export function LeadChart() {
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold text-card-foreground">
-        Vehicle Per day Trends
+        Vehicle / Day Trends
       </h2>
 
       <div className="rounded-lg border border-border bg-background p-4">

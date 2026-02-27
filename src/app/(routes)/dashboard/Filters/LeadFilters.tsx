@@ -68,7 +68,7 @@ export function LeadFilters() {
           value={filters.body_type}
           onValueChange={(value) => dispatch(setBodyType(value))}
         >
-          <SelectTrigger id="body-type" className="w-auto min-w-full">
+          <SelectTrigger id="body-type" className="max-w-72 w-full">
             <SelectValue placeholder="All Types" />
           </SelectTrigger>
 
@@ -103,7 +103,7 @@ export function LeadFilters() {
             >
               {visibleBodies.map((bodyType: string) => (
                 <SelectItem key={bodyType} value={bodyType}>
-                  {bodyType}
+                 <p className="truncate max-w-72">{bodyType}</p>
                 </SelectItem>
               ))}
             </div>
@@ -120,13 +120,13 @@ export function LeadFilters() {
           value={filters.demand_level}
           onValueChange={(value) => dispatch(setDemandLevel(value))}
         >
-          <SelectTrigger id="demand-level" className="w-auto min-w-full">
+          <SelectTrigger id="demand-level" className="max-w-72 w-full">
             <SelectValue placeholder="All Levels" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Low">Low</SelectItem>
-            <SelectItem value="High">High</SelectItem>
-            <SelectItem value="High Borderline">High Borderline</SelectItem>
+            <SelectItem  value="Low"><p className="truncate max-w-72">Low</p></SelectItem>
+            <SelectItem value="High"><p className="truncate max-w-72">High</p></SelectItem>
+            <SelectItem value="High Borderline"><p className="truncate max-w-72">High Borderline</p></SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -141,7 +141,7 @@ export function LeadFilters() {
           value={filters.vin}
           onValueChange={(value) => dispatch(setVinNumber(value))}
         >
-          <SelectTrigger id="vin-number" className="w-auto min-w-full">
+          <SelectTrigger id="vin-number" className=" max-w-72 w-full">
             <SelectValue placeholder="Select VIN" />
           </SelectTrigger>
 
@@ -173,7 +173,7 @@ export function LeadFilters() {
             >
               {visibleVins.map((vinNumber: string) => (
                 <SelectItem key={vinNumber} value={vinNumber}>
-                  {vinNumber}
+                 <p className="truncate max-w-72">{vinNumber}</p>
                 </SelectItem>
               ))}
             </div>
@@ -190,13 +190,13 @@ export function LeadFilters() {
           value={filters.store}
           onValueChange={(value) => dispatch(setStore(value))}
         >
-          <SelectTrigger id="max-weeks" className="w-auto min-w-full">
+          <SelectTrigger id="max-weeks" className="max-w-72 w-full">
             <SelectValue placeholder="Select store" />
           </SelectTrigger>
           <SelectContent>
             {store?.response?.stores?.map((store: string) => (
               <SelectItem key={store} value={store}>
-                {store}
+                <p className="truncate max-w-72">{store}</p>
               </SelectItem>
             ))}
           </SelectContent>
@@ -206,13 +206,13 @@ export function LeadFilters() {
       {/* Leads Per Day Filter */}
       <div className="space-y-2">
         <Label htmlFor="leads-per-day" className="text-sm font-medium">
-          Leads Per Day
+          Leads / Day
         </Label>
          <Select
           value={filters.leads_per_day}
           onValueChange={(value) => dispatch(setLeadsPerDay(value))}
         >
-          <SelectTrigger id="leads-per-day" className="w-auto min-w-full">
+          <SelectTrigger id="leads-per-day" className="max-w-72 w-full">
             <SelectValue placeholder="Select range" />
           </SelectTrigger>
 
@@ -235,7 +235,7 @@ export function LeadFilters() {
             >
               {visibleLeads.map((range: string) => (
                 <SelectItem key={range} value={range}>
-                  {range}
+                  <p className="truncate max-w-72">{range}</p>
                 </SelectItem>
               ))}
             </div>

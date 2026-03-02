@@ -107,7 +107,7 @@ export default function Login() {
             <div className="absolute inset-0 rounded-lg border border-primary/20 animate-pulse"></div>
           </div>
           <h1 className="text-4xl font-black tracking-tight">
-            LEAD BOOST
+            LeadBoostAI
           </h1>
         </div>
 

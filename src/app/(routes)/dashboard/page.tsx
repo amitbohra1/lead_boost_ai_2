@@ -130,7 +130,7 @@ export default function DashboardPage() {
           filters={appliedFilters}
           isLoading={isLoading}
         />
-        <DashboardTabs refreshDemand={refreshDemand}/>
+        <DashboardTabs refreshDemand={refreshDemand} appliedFilters={appliedFilters}/>
       </main>
     </div>
   );

@@ -9,16 +9,17 @@ import { selectFilters } from "@/store/slices/filterSlice";
 import { useGetInventoryOverview } from "../api/api";
 import { Spinner } from "@/components/ui/spinner";
 
-export function InventoryOverviewTab() {
+interface InventoryOverviewTabProps {
+  filters: any;
+}
+export function InventoryOverviewTab({ filters }: InventoryOverviewTabProps) {
   const dispatch = useAppDispatch();
   const view = useAppSelector(selectInventoryView);
-  const filters = useAppSelector(selectFilters);
-  const { data, isLoading, isFetching, error } = useGetInventoryOverview(
-    filters,
-    true,
+  const { data, isLoading, isFetching } = useGetInventoryOverview(
+   filters,
+  !!filters
   );
 
-  // ✅ Show spinner when API is pending (initial + refetch)
   if (isLoading || isFetching) {
     return (
       <div className="flex min-h-[300px] items-center justify-center">

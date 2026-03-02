@@ -8,7 +8,11 @@ import { StatusRecodeTab } from "./StatusRecodeTab"
 import { LeadPerformanceTab } from "./LeadPerformanceTab"
 import { PerformanceTab } from "./PerformanceTab"
 
-export function DashboardTabs() {
+interface DashboardTabsProps {
+  refreshDemand: number;
+}
+
+export function DashboardTabs({ refreshDemand }: DashboardTabsProps) {
   const dispatch = useAppDispatch()
   const activeTab = useAppSelector(selectActiveTab)
 
@@ -54,8 +58,8 @@ export function DashboardTabs() {
         <div className="p-6">
           {activeTab === "lead-performance" && <LeadPerformanceTab />}
           {activeTab === "inventory-overview" && <InventoryOverviewTab />}
-          {activeTab === "performance" && <PerformanceTab />}
-          {activeTab === "status-recode" && <StatusRecodeTab />}
+          {activeTab === "performance" && <PerformanceTab refreshDemand={refreshDemand} />}
+          {activeTab === "status-recode" && <StatusRecodeTab refreshDemand={refreshDemand} />}
         </div>
       </div>
     </div>

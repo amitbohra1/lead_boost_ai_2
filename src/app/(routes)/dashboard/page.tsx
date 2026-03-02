@@ -25,6 +25,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [roleId, setRoleId] = useState("");
   const [appliedFilters, setAppliedFilters] = useState<any>(null);
+  const [refreshDemand, setRefreshDemand] = useState(0);
   useEffect(() => {
     const auth = localStorage.getItem("authorization");
 
@@ -81,6 +82,7 @@ export default function DashboardPage() {
       leads_per_day: filters.leads_per_day,
     };
     setAppliedFilters(payload);
+    setRefreshDemand(prev => prev + 1);
     applyFilter(payload);
 
     applyFilterForLeads(payload, {
@@ -128,7 +130,7 @@ export default function DashboardPage() {
           filters={appliedFilters}
           isLoading={isLoading}
         />
-        <DashboardTabs />
+        <DashboardTabs refreshDemand={refreshDemand}/>
       </main>
     </div>
   );

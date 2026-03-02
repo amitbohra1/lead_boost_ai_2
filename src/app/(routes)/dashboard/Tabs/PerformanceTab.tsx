@@ -4,8 +4,11 @@
 import { ModelThreeChart } from "../Charts/ModelThreeChart"
 // import { PredictListPriceChart } from "../Charts/PredictListPriceChart"
 
+interface PerformanceTabProps {
+  refreshDemand: number;
+}
 
-export function PerformanceTab() {
+export function PerformanceTab({ refreshDemand }: PerformanceTabProps) {
   return (
     <div className="space-y-6">
       {/* Chart 1: Demand Categorisation */}
@@ -20,7 +23,7 @@ export function PerformanceTab() {
 
       {/* Chart 3: Model Three */}
       <div className="rounded-xl border border-border bg-gradient-to-br from-card to-muted/20 p-6 shadow-sm">
-        <ModelThreeChart />
+        <ModelThreeChart refreshDemand={refreshDemand} />
       </div>
     </div>
   )

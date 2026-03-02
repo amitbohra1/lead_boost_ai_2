@@ -140,9 +140,9 @@ export const useApplyFilterForLeads = () => {
   });
 };
 
-export const useGetJobHealth = () => {
+export const useGetJobHealth = (refreshDemand: number) => {
   return useQuery({
-    queryKey: ["job-health"],
+    queryKey: ["job-health", refreshDemand],
     queryFn: async () => {
       const response = await apicall("get", "/dashboard/job_health", {});
       const resData = response.data;
@@ -211,9 +211,9 @@ export const useGetInventoryOverview = (
   });
 };
 
-export const useGetDemandCount = () => {
+export const useGetDemandCount = (refreshDemand: number) => {
   return useQuery({
-    queryKey: ["demand-count"],
+    queryKey: ["demand-count", refreshDemand],
     queryFn: async () => {
       const response = await apicall("get", "/dashboard/demand_count", {})
 

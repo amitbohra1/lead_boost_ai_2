@@ -9,9 +9,14 @@ import { getChartColors } from "@/theme/chartColors";
 import { useGetDemandCount } from "../api/api";
 import { Spinner } from "@/components/ui/spinner";
 
-export function ModelThreeChart() {
+interface ModelThreeChartProps {
+  refreshDemand: number;
+}
+
+export function ModelThreeChart({ refreshDemand }: ModelThreeChartProps) {
   const theme = useAppSelector(selectTheme);
-  const { data, isLoading } = useGetDemandCount();
+
+  const { data, isLoading, isFetching } = useGetDemandCount(refreshDemand);
 
   const options = useMemo(() => {
     const colors = getChartColors(theme);
@@ -27,9 +32,7 @@ export function ModelThreeChart() {
 
       xAxis: {
         categories: data?.weeks || [],
-        labels: {
-          style: { color: colors.textColor },
-        },
+        labels: { style: { color: colors.textColor } },
       },
 
       yAxis: {
@@ -38,7 +41,7 @@ export function ModelThreeChart() {
         max: 100,
       },
 
-     tooltip: {
+      tooltip: {
         shared: true,
         valueSuffix: "%",
         headerFormat: "",
@@ -63,7 +66,7 @@ export function ModelThreeChart() {
     } as Highcharts.Options;
   }, [theme, data]);
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <Spinner />
@@ -73,7 +76,9 @@ export function ModelThreeChart() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-card-foreground">Performance</h2>
+      <h2 className="text-lg font-semibold text-card-foreground">
+        Performance
+      </h2>
       <div className="rounded-lg border border-border bg-background p-4">
         <HighchartsReact highcharts={Highcharts} options={options} />
       </div>

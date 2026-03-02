@@ -235,7 +235,7 @@ export function LeadFilters() {
             >
               {visibleLeads.map((range: string) => (
                 <SelectItem key={range} value={range}>
-                  <p className="truncate max-w-72">{range}</p>
+                  <p className="truncate max-w-72"> ≤ {range}</p>
                 </SelectItem>
               ))}
             </div>

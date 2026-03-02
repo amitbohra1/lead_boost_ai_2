@@ -3,7 +3,7 @@
 import { Spinner } from "@/components/ui/spinner";
 import { StatCard } from "@/components/ui/stat-card";
 import { Car, Users, TrendingUp, AlertCircle } from "lucide-react";
-import { useGetOverallMetrics } from "../api/api";
+import { useGetInventoryOverview, useGetOverallMetrics } from "../api/api";
 
 export function LeadStatsCards({ data, isLoading, token }: any) {
   const metrics = data?.response?.metrics;
@@ -12,6 +12,9 @@ const {
     isLoading: isOverallLoading,
   } = useGetOverallMetrics(token);
 
+
+  const { data: actionData } = useGetInventoryOverview(token);
+  console.log("Action Data:", actionData);
   const overallMetrics = overallData?.response?.metrics;
   if (isLoading || isOverallLoading) {
     return <div className="flex justify-center items-center"><Spinner /></div>;
@@ -76,7 +79,7 @@ const {
 
       <StatCard
         title="Action Items"
-        value="--"
+        value={actionData?.response?.action_items || 0}
         subtitle="Require price adjustment"
         icon={AlertCircle}
         colorScheme="warning"

@@ -14,7 +14,7 @@ const {
 
 
   const { data: actionData } = useGetInventoryOverview(token);
-  console.log("Action Data:", actionData);
+ 
   const overallMetrics = overallData?.response?.metrics;
   if (isLoading || isOverallLoading) {
     return <div className="flex justify-center items-center"><Spinner /></div>;

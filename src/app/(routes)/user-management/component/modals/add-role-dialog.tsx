@@ -80,7 +80,6 @@ export function AddRoleDialog({ open, onOpenChange }: AddRoleDialogProps) {
       },
       {
         onSuccess: (response) => {
-          console.log(response);
           if (response.header.code !== 200) {
             toast.warning(
               response?.header.message ||

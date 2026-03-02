@@ -110,7 +110,6 @@ export default function UserList() {
       },
       {
         onSuccess: (response) => {
-          console.log(response)
           if (response.header.code !== 200) {
                     toast.warning(
                       response?.header.message ||

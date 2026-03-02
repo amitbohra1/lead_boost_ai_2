@@ -178,7 +178,6 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
       },
       {
         onSuccess: (response) => {
-          console.log(response);
           if (response.header.code !== 200) {
             toast.warning(
               response?.header.message ||

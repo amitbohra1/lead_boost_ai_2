@@ -38,9 +38,12 @@ export function ModelThreeChart() {
         max: 100,
       },
 
-      tooltip: {
+     tooltip: {
         shared: true,
         valueSuffix: "%",
+        headerFormat: "",
+        pointFormat:
+          '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y}</b><br/>',
       },
 
       series: [

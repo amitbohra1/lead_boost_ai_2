@@ -3,24 +3,33 @@
 import { Spinner } from "@/components/ui/spinner";
 import { StatCard } from "@/components/ui/stat-card";
 import { Car, Users, TrendingUp, AlertCircle } from "lucide-react";
-import { useGetInventoryOverview, useGetOverallMetrics } from "../api/api";
+import {
+  useGetInventoryOverview,
+  useGetOverallMetrics,
+} from "../api/api";
 
-export function LeadStatsCards({ data, isLoading, token }: any) {
+export function LeadStatsCards({ data, isLoading, filters }: any) {
+
   const metrics = data?.response?.metrics;
-const {
+
+  const {
     data: overallData,
     isLoading: isOverallLoading,
-  } = useGetOverallMetrics(token);
+  } = useGetOverallMetrics(filters);
 
+  const {
+    data: actionData,
+    isLoading: isActionLoading,
+  } = useGetInventoryOverview(filters);
 
-  const { data: actionData } = useGetInventoryOverview(token);
- 
   const overallMetrics = overallData?.response?.metrics;
-  if (isLoading || isOverallLoading) {
-    return <div className="flex justify-center items-center"><Spinner /></div>;
-  }
-  if (isLoading) {
-    return <div className="flex justify-center items-center"><Spinner /></div>;
+
+  if (isLoading || isOverallLoading || isActionLoading) {
+    return (
+      <div className="flex justify-center items-center">
+        <Spinner />
+      </div>
+    );
   }
 
   return (
@@ -46,8 +55,7 @@ const {
         icon={Users}
         colorScheme="success"
         trend={{
-          value:
-            metrics?.total_leads_pct_compared_to_last_week || 0,
+          value: metrics?.total_leads_pct_compared_to_last_week || 0,
           isPositive:
             (metrics?.total_leads_pct_compared_to_last_week ?? 0) > 0,
           format: "badge",
@@ -61,8 +69,7 @@ const {
         icon={TrendingUp}
         colorScheme="accent"
         trend={{
-          value:
-            metrics?.avg_leads_pct_compared_to_last_week || 0,
+          value: metrics?.avg_leads_pct_compared_to_last_week || 0,
           isPositive:
             (metrics?.avg_leads_pct_compared_to_last_week ?? 0) > 0,
           format: "badge",
@@ -72,7 +79,6 @@ const {
       <StatCard
         title="Overall Avg / Day"
         value={overallMetrics?.overall_avg_leads?.toLocaleString() || 0}
-        // subtitle={`Avg Leads: ${overallMetrics?.overall_avg_leads || 0}`}
         icon={TrendingUp}
         colorScheme="secondary"
       />

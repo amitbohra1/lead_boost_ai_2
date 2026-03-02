@@ -24,7 +24,7 @@ export default function DashboardPage() {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
   const [roleId, setRoleId] = useState("");
-
+  const [appliedFilters, setAppliedFilters] = useState<any>(null);
   useEffect(() => {
     const auth = localStorage.getItem("authorization");
 
@@ -80,7 +80,7 @@ export default function DashboardPage() {
       store: filters.store,
       leads_per_day: filters.leads_per_day,
     };
-
+    setAppliedFilters(payload);
     applyFilter(payload);
 
     applyFilterForLeads(payload, {
@@ -91,8 +91,8 @@ export default function DashboardPage() {
   };
 
   const handleClearFilters = () => {
-  dispatch(resetFilters());
-};
+    dispatch(resetFilters());
+  };
 
   const finalData = appliedData || defaultData;
   const isLoading = isApplying || isDefaultLoading;
@@ -112,18 +112,22 @@ export default function DashboardPage() {
               Filters
             </h2>
             <div className="flex gap-2">
-            <Button variant={"default"} onClick={handleClearFilters}>
-              Clear
-            </Button>
-            <Button variant={"default"} onClick={handleApplyFilters}>
-              Apply
-            </Button>
+              <Button variant={"default"} onClick={handleClearFilters}>
+                Clear
+              </Button>
+              <Button variant={"default"} onClick={handleApplyFilters}>
+                Apply
+              </Button>
             </div>
           </div>
           <LeadFilters />
         </div>
 
-        <LeadStatsCards data={finalData} isLoading={isLoading} />
+        <LeadStatsCards
+          data={finalData}
+          filters={appliedFilters}
+          isLoading={isLoading}
+        />
         <DashboardTabs />
       </main>
     </div>

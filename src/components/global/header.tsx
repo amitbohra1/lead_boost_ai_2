@@ -20,17 +20,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { selectFilters } from "@/store/slices/filterSlice";
 import { useRouter } from "next/navigation";
 import { clearSession } from "@/utils/storage";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { RootState } from "@/store/redux/store";
 
 export function Header() {
   const dispatch = useAppDispatch();
   const theme = useAppSelector(selectTheme);
   const router = useRouter();
   const [userInitials, setUserInitials] = useState("U");
-
+  const features = useAppSelector((state: RootState) => state.feature.features);
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
@@ -53,6 +53,22 @@ export function Header() {
     clearSession();
     router.push("/login");
   };
+
+  const hideUserManagement = useMemo(() => {
+    if (!Array.isArray(features)) return false;
+
+    const uamGroup = features.find((grp) => grp.feature_grp_name === "UAM");
+
+    const featureList = uamGroup?.feature_list ?? [];
+
+    return (
+      featureList.length > 0 &&
+      featureList.every(
+        (feature: { permission_level: number }) =>
+          feature.permission_level === 1,
+      )
+    );
+  }, [features]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-gradient-to-r from-primary/10 via-accent/10 to-info/10 backdrop-blur">
@@ -78,15 +94,17 @@ export function Header() {
           >
             <Home className="size-5" />
           </Button>
-          <Button
-            variant="custom"
-            size="icon"
-            title="User management"
-            className="border border-border bg-primary/50 text-muted dark:text-foreground rounded-lg"
-            onClick={() => router.push("/user-management")}
-          >
-            <Users className="size-5" />
-          </Button>
+          {!hideUserManagement && (
+            <Button
+              variant="custom"
+              size="icon"
+              title="User management"
+              className="border border-border bg-primary/50 text-muted dark:text-foreground rounded-lg"
+              onClick={() => router.push("/user-management")}
+            >
+              <Users className="size-5" />
+            </Button>
+          )}
           <Button
             variant="custom"
             size="icon"

@@ -12,10 +12,11 @@ import { useGetJobHealth } from "../api/api";
 import { Spinner } from "@/components/ui/spinner";
 
 interface StatusRecodeTabProps {
-  refreshDemand: number;
+  isLoadingJobs: boolean;
 }
+
 export type JobStatus = "completed" | "in-progress" | "pending" | "failed";
-export function StatusRecodeTab({ refreshDemand }: StatusRecodeTabProps) {
+export function StatusRecodeTab({ isLoadingJobs }: StatusRecodeTabProps) {
   const dispatch = useAppDispatch();
   const activeDay = useAppSelector(selectActiveStatusRecodeDay);
 
@@ -35,7 +36,7 @@ export function StatusRecodeTab({ refreshDemand }: StatusRecodeTabProps) {
     return tabs;
   }, []);
 
-  const { data, isLoading, isFetching } = useGetJobHealth(refreshDemand);
+  const { data, isLoading } = useGetJobHealth();
 
   const jobs = useMemo(() => {
     if (!data?.response) return [];
@@ -91,9 +92,9 @@ export function StatusRecodeTab({ refreshDemand }: StatusRecodeTabProps) {
     }
   };
 
-  if (isLoading || isFetching) {
+  if (isLoading || isLoadingJobs) {
     return (
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex h-64 items-center justify-center">
         <Spinner />
       </div>
     );

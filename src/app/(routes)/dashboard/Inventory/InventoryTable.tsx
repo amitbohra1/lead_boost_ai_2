@@ -21,54 +21,33 @@ import {
   TrendingUp,
   TrendingDown,
 } from "lucide-react";
-
-interface ApiInventoryItem {
-  stock: string;
-  vehicle: string;
-  age: number;
-  total_leads: number;
-  avg_leads_per_day: number;
-  VIN: string;
-  current_price: string;
-  purchase_price: string;
-  trend: string;
-  demand: string;
-  ai_suggestion: string;
-  final_demand_prediction: string;
-}
+import { ApiInventoryItem } from "@/interface/interface";
 
 interface InventoryTableProps {
   data: any;
 }
 
-type Inventory = {
-  carName: string;
-  purchasePrice: number;
-  currentPrice: number;
-  daysUnsold: number;
-  avgLeadsPerDay: number;
-  totalLeads: number;
-  trend: string;
-  demand: string;
-  aiSuggestion: string;
-};
-
 export function InventoryTable({ data }: InventoryTableProps) {
+  const safeValue = (value: any) => {
+    if (value === undefined || value === null || Number.isNaN(value)) {
+      return "";
+    }
+    return value;
+  };
   const inventoryData: Inventory[] = useMemo(() => {
     const apiData: ApiInventoryItem[] =
       data?.response?.overall_stock_data_combined || [];
-
     return apiData.map((item) => ({
-      carName: item.vehicle,
-      purchasePrice: Number(item.purchase_price || 0),
-      currentPrice: Number(item.current_price || 0),
-      daysUnsold: item.age,
-      avgLeadsPerDay: item.avg_leads_per_day,
-      totalLeads: item.total_leads,
-      trend: item.trend?.toLowerCase() === "up" ? "Up" : "Down",
-      demand:
-        item.final_demand_prediction === "High Demand" ? "High" : "Medium",
-      aiSuggestion: item.ai_suggestion,
+      vehicleName: item.vehicle ?? "",
+      vin: item.VIN ?? "",
+      purchasePrice: safeValue(item.purchase_price),
+      currentPrice: safeValue(item.current_price),
+      daysUnsold: safeValue(item.age),
+      avgLeadsPerDay: safeValue(item.avg_leads_per_day),
+      totalLeads: safeValue(item.total_leads),
+      trend: item.trend ?? "",
+      demand: item.final_demand_prediction ?? "",
+      aiSuggestion: item.ai_suggestion ?? "",
     }));
   }, [data]);
 
@@ -78,12 +57,25 @@ export function InventoryTable({ data }: InventoryTableProps) {
     pageIndex: 0,
     pageSize: 50,
   });
+  const formatCurrency = (value: any) => {
+    if (value === null || value === undefined) return "";
+
+    const num = Number(value);
+
+    if (isNaN(num)) return value;
+
+    return `$${num.toLocaleString()}`;
+  };
 
   const columns = useMemo<ColumnDef<Inventory>[]>(
     () => [
       {
-        accessorKey: "carName",
-        header: "Car Name",
+        accessorKey: "vehicleName",
+        header: "Vehicle Name",
+      },
+      {
+        accessorKey: "vin",
+        header: "VIN",
       },
       {
         accessorKey: "purchasePrice",
@@ -156,9 +148,7 @@ export function InventoryTable({ data }: InventoryTableProps) {
 
       <div className="px-3 py-4">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">
-            Vehicle Inventory Details
-          </h2>
+          <h2 className="text-lg font-semibold">Vehicle Inventory Details</h2>
           <p className="text-sm text-muted-foreground">
             {table.getFilteredRowModel().rows.length} vehicles
           </p>
@@ -166,110 +156,107 @@ export function InventoryTable({ data }: InventoryTableProps) {
 
         {/* TABLE */}
         <div className="w-full overflow-x-auto">
-          <div className="max-h-[70vh] overflow-y-auto border rounded-md">
-          <table className="min-w-max border-collapse w-full">
-            <thead className="bg-muted sticky top-0 z-10">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    const isSorted = header.column.getIsSorted();
-
-                    return (
-                      <th
-                        key={header.id}
-                        onClick={header.column.getToggleSortingHandler()}
-                        className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground cursor-pointer select-none whitespace-nowrap"
-                      >
-                        <div className="flex items-center gap-2">
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-
-                          {isSorted === "asc" && (
-                            <ArrowUp className="h-3 w-3" />
-                          )}
-                          {isSorted === "desc" && (
-                            <ArrowDown className="h-3 w-3" />
-                          )}
-                          {!isSorted && (
-                            <ArrowUpDown className="h-3 w-3 opacity-50" />
-                          )}
-                        </div>
-                      </th>
-                    );
-                  })}
-                </tr>
-              ))}
-            </thead>
-
-            <tbody className="divide-y divide-border overflow-auto max-h-[450px]">
-              {table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="hover:bg-muted/30"
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      const value = cell.getValue();
+          <div className="max-h-[70vh] h-screen overflow-y-auto border rounded-md">
+            <table className="min-w-max border-collapse w-full">
+              <thead className="bg-muted sticky top-0 z-10">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      const isSorted = header.column.getIsSorted();
 
                       return (
-                        <td
-                          key={cell.id}
-                          className="px-4 py-2 whitespace-nowrap"
+                        <th
+                          key={header.id}
+                          onClick={header.column.getToggleSortingHandler()}
+                          className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground cursor-pointer select-none whitespace-nowrap"
                         >
-                          {cell.column.id === "purchasePrice" ||
-                          cell.column.id === "currentPrice" ? (
-                            `$${Number(value).toLocaleString()}`
-                          ) : cell.column.id === "trend" ? (
-                            value === "Up" ? (
-                              <Badge className="bg-success/10 text-success border-success/20">
-                                <TrendingUp className="mr-1 h-3 w-3" />
-                                Up
-                              </Badge>
-                            ) : (
-                              <Badge className="bg-destructive/10 text-destructive border-destructive/20">
-                                <TrendingDown className="mr-1 h-3 w-3" />
-                                Down
-                              </Badge>
-                            )
-                          ) : cell.column.id === "demand" ? (
-                            <Badge
-                              className={
-                                value === "High"
-                                  ? "bg-success/10 text-success border-success/20"
-                                  : "bg-warning/10 text-warning border-warning/20"
-                              }
-                            >
-                              {value as string}
-                            </Badge>
-                          ) : (
-                           <span className="whitespace-nowrap">
-                              {flexRender(
-                                cell.column.columnDef.cell ??
-                                  (() => value as string),
-                                cell.getContext(),
-                              )}
-                            </span>
-                          )}
-                        </td>
+                          <div className="flex items-center gap-2">
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+
+                            {isSorted === "asc" && (
+                              <ArrowUp className="h-3 w-3" />
+                            )}
+                            {isSorted === "desc" && (
+                              <ArrowDown className="h-3 w-3" />
+                            )}
+                            {!isSorted && (
+                              <ArrowUpDown className="h-3 w-3 opacity-50" />
+                            )}
+                          </div>
+                        </th>
                       );
                     })}
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="py-12 text-center text-muted-foreground"
-                  >
-                    No vehicles found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                ))}
+              </thead>
+
+              <tbody className="divide-y divide-border overflow-auto max-h-[450px]">
+                {table.getRowModel().rows.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <tr key={row.id} className="hover:bg-muted/30">
+                      {row.getVisibleCells().map((cell) => {
+                        const value = cell.getValue() as string | number | null;
+
+                        return (
+                          <td
+                            key={cell.id}
+                            className="px-4 py-2 whitespace-nowrap"
+                          >
+                            {cell.column.id === "purchasePrice" ||
+                            cell.column.id === "currentPrice" ? (
+                              formatCurrency(value ?? "")
+                            ) : cell.column.id === "trend" ? (
+                              String(value).toLowerCase() === "up" ? (
+                                <Badge className="bg-success/10 text-success border-success/20">
+                                  <TrendingUp className="mr-1 h-3 w-3" />
+                                  {value}
+                                </Badge>
+                              ) : (
+                                <Badge className="bg-destructive/10 text-destructive border-destructive/20">
+                                  <TrendingDown className="mr-1 h-3 w-3" />
+                                  {value}
+                                </Badge>
+                              )
+                            ) : cell.column.id === "demand" ? (
+                              <Badge
+                                className={
+                                  String(value).toLowerCase().includes("high")
+                                    ? "bg-success/10 text-success border-success/20"
+                                    : "bg-warning/10 text-warning border-warning/20"
+                                }
+                              >
+                              {String(value).replace(" Demand", "")}
+                              </Badge>
+                            ) : (
+                              <span className="whitespace-nowrap">
+                                {flexRender(
+                                  cell.column.columnDef.cell ??
+                                    (() => value as string),
+                                  cell.getContext(),
+                                )}
+                              </span>
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={columns.length}
+                      className="py-12 text-center text-muted-foreground"
+                    >
+                      No vehicles found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* PAGINATION */}

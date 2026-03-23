@@ -5,24 +5,23 @@ import { InventoryDataCards } from "../Inventory/InventoryDataCards";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { selectInventoryView, setInventoryView } from "@/store/slices/uiSlice";
 import { ViewToggle } from "@/components/ui/view-toggle";
-import { selectFilters } from "@/store/slices/filterSlice";
 import { useGetInventoryOverview } from "../api/api";
 import { Spinner } from "@/components/ui/spinner";
 
 interface InventoryOverviewTabProps {
   filters: any;
+  isLoadingInventory: boolean;
 }
-export function InventoryOverviewTab({ filters }: InventoryOverviewTabProps) {
+export function InventoryOverviewTab({ filters, isLoadingInventory }: InventoryOverviewTabProps) {
   const dispatch = useAppDispatch();
   const view = useAppSelector(selectInventoryView);
-  const { data, isLoading, isFetching } = useGetInventoryOverview(
-   filters,
-  !!filters
+  const { data, isLoading } = useGetInventoryOverview(
+   filters
   );
 
-  if (isLoading || isFetching) {
+  if (isLoading || isLoadingInventory) {
     return (
-      <div className="flex min-h-[300px] items-center justify-center">
+      <div className="flex h-64 items-center justify-center">
         <Spinner />
       </div>
     );

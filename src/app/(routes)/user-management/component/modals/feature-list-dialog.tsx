@@ -15,7 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Feature } from "@/interface/interface";
+// import { Feature } from "@/interface/interface";
 import { useAssingFeature, useFeatureList } from "../api";
 import { toast } from "sonner";
 

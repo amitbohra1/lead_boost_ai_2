@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Shield } from "lucide-react";
 import { useCreateRole } from "../api";
 import { toast } from "sonner";
+import { queryClient } from "@/providers/query-provider";
 
 interface AddRoleDialogProps {
   open: boolean;
@@ -89,6 +90,9 @@ export function AddRoleDialog({ open, onOpenChange }: AddRoleDialogProps) {
             return;
           }
           toast.success("Role created successfully");
+          queryClient.invalidateQueries({
+            queryKey: ["roleList"],
+          });
           resetForm();
           onOpenChange(false);
         },
@@ -149,7 +153,7 @@ export function AddRoleDialog({ open, onOpenChange }: AddRoleDialogProps) {
             </div>
           </div>
           <DialogFooter className="mt-6">
-            <Button type="submit" className="text-text">
+            <Button type="submit">
               Create Role
             </Button>
           </DialogFooter>

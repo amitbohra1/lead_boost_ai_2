@@ -1,25 +1,25 @@
 export function getChartColors(theme: "light" | "dark") {
   if (theme === "dark") {
     return {
-      chart1: "oklch(0.65 0.24 263)",
-      chart2: "oklch(0.70 0.20 220)",
-      chart3: "oklch(0.75 0.18 180)",
-      chart4: "oklch(0.80 0.15 140)",
-      chart5: "oklch(0.68 0.22 300)",
-      textColor: "oklch(0.98 0 0)",
-      gridColor: "oklch(0.24 0.02 263)",
-      backgroundColor: "oklch(0.17 0.01 263)",
-    }
+      chart1: "#4264FF",
+      chart2: "#00A7E6",
+      chart3: "#00C7B2",
+      chart4: "#59D84F",
+      chart5: "#C04CFF",
+      textColor: "#FAFAFA",
+      gridColor: "#2B2F3F",
+      backgroundColor: "#16181F",
+    };
   }
 
   return {
-    chart1: "oklch(0.55 0.22 263)",
-    chart2: "oklch(0.65 0.18 220)",
-    chart3: "oklch(0.70 0.15 180)",
-    chart4: "oklch(0.75 0.12 140)",
-    chart5: "oklch(0.60 0.20 300)",
-    textColor: "oklch(0.15 0 0)",
-    gridColor: "oklch(0.90 0.005 263)",
-    backgroundColor: "oklch(1 0 0)",
-  }
+    chart1: "#304FEA",
+    chart2: "#0092C9",
+    chart3: "#00B09D",
+    chart4: "#45C23E",
+    chart5: "#A33DF2",
+    textColor: "#262626",
+    gridColor: "#E6E6E8",
+    backgroundColor: "#FFFFFF",
+  };
 }

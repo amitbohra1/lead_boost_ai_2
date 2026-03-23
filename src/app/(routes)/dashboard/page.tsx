@@ -1,7 +1,6 @@
 "use client";
 
 import { LeadFilters } from "./Filters/LeadFilters";
-// import { InventoryFilters } from "./Filters/InventoryFilters";
 import { LeadStatsCards } from "./Lead/LeadStatsCards";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { DashboardTabs } from "./Tabs/DashboardTabs";
@@ -25,7 +24,6 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [roleId, setRoleId] = useState("");
   const [appliedFilters, setAppliedFilters] = useState<any>(null);
-  const [refreshDemand, setRefreshDemand] = useState(0);
   useEffect(() => {
     const auth = localStorage.getItem("authorization");
 
@@ -38,7 +36,7 @@ export default function DashboardPage() {
       console.error("Invalid auth data");
     }
   }, []);
-
+  
   const { data: features } = useFeatureList(roleId, !!roleId);
 
   useEffect(() => {
@@ -70,6 +68,7 @@ export default function DashboardPage() {
     vin: "",
     store: "",
     leads_per_day: "",
+    acquisition_type: "",
   });
 
   const handleApplyFilters = () => {
@@ -80,9 +79,9 @@ export default function DashboardPage() {
       vin: filters.vin,
       store: filters.store,
       leads_per_day: filters.leads_per_day,
+      acquisition_type: filters.acquisition_type,
     };
     setAppliedFilters(payload);
-    setRefreshDemand(prev => prev + 1);
     applyFilter(payload);
 
     applyFilterForLeads(payload, {
@@ -130,7 +129,7 @@ export default function DashboardPage() {
           filters={appliedFilters}
           isLoading={isLoading}
         />
-        <DashboardTabs refreshDemand={refreshDemand} appliedFilters={appliedFilters}/>
+        <DashboardTabs appliedFilters={appliedFilters} isLoading={isLoading} />
       </main>
     </div>
   );

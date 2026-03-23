@@ -29,12 +29,13 @@ export default function UserManagement() {
   const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
   const features = useSelector((state: RootState) => state.feature.features);
   const { data, isLoading } = useTabsList();
-  const tabsList = data?.response ?? [];
+  const tabsList = Array.isArray(data) ? data : (data?.data ?? []);
+
   const uamPermissions = useMemo(() => {
     if (!Array.isArray(features)) return {};
     const uamGroup = features.find((grp) => grp.feature_grp_name === "UAM");
     const list = uamGroup?.feature_list ?? [];
-    return list.reduce<Record<string, number>>((acc, feature) => {
+    return list.reduce<Record<string, number>>((acc: { [x: string]: any; }, feature: { feature_name: string; permission_level: number; }) => {
       if (!feature?.feature_name) return acc;
       acc[feature.feature_name.toLowerCase()] = feature.permission_level ?? 0;
       return acc;
@@ -79,7 +80,6 @@ export default function UserManagement() {
   const handleAddClick = (tabName: string) => {
     const name = tabName.toLowerCase().trim();
     const permission = uamPermissions[name];
-
     if (![3, 4].includes(permission)) {
       toast.error("You do not have permission to perform this action.");
       return;
@@ -92,11 +92,13 @@ export default function UserManagement() {
       setIsUserDialogOpen(true);
     }
   };
+  
 
   const activeTabData = accessibleTabs.find(
     (tab: any) => tab.tab_name.toLowerCase() === activeTab,
   );
 
+  
   if (isLoading) {
     return <div className="p-6">Loading tabs...</div>;
   }
@@ -110,7 +112,7 @@ export default function UserManagement() {
   }
 
   return (
-    <div className="p-6">
+    <div className="container mx-auto px-4 py-6 space-y-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground">User Management</h1>
         <p className="text-sm text-muted-foreground mt-1">
@@ -145,7 +147,7 @@ export default function UserManagement() {
 
           <Button
             onClick={() => handleAddClick(activeTab)}
-            className="gap-2"
+            className="gap-2 shadow-sm hover:shadow-md transition-shadow"
           >
             <Plus className="size-4" />
             Add {activeTabData?.add_button}

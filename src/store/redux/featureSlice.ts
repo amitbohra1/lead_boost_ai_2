@@ -1,4 +1,5 @@
-import { ApiFeatureGroup } from "@/app/(routes)/user-management/component/api";
+
+import { ApiFeatureGroup } from "@/interface/interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface FeatureState {

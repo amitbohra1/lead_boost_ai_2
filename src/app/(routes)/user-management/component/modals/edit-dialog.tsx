@@ -117,7 +117,6 @@ export function EditRoleDialog({
         </div>
         <DialogFooter className="gap-2">
           <Button
-            className="text-text"
             onClick={onSave}
             disabled={!roleName.trim()}
           >
@@ -250,7 +249,6 @@ export function EditUserDialog({
         </div>
         <DialogFooter className="gap-2">
           <Button
-            className="text-text"
             onClick={onSave}
             disabled={
               !firstName.trim() ||

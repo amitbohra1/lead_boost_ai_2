@@ -8,7 +8,14 @@ import {
   useGetOverallMetrics,
 } from "../api/api";
 
-export function LeadStatsCards({ data, isLoading, filters }: any) {
+interface LeadStatsCardsProps {
+  data: any;
+  isLoading: boolean;
+  filters: any;
+}
+
+
+export function LeadStatsCards({ data, isLoading, filters }: LeadStatsCardsProps) {
 
   const metrics = data?.response?.metrics;
 
@@ -35,7 +42,7 @@ export function LeadStatsCards({ data, isLoading, filters }: any) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       <StatCard
-        title="Total Unsold Cars"
+        title="Total Unsold Vehicles"
         value={metrics?.total_unsold_cars?.toLocaleString() || 0}
         subtitle="Compared to last week"
         icon={Car}
@@ -63,7 +70,7 @@ export function LeadStatsCards({ data, isLoading, filters }: any) {
       />
 
       <StatCard
-        title="Avg Leads / Day"
+        title="Weekly Avg Leads / Day"
         value={metrics?.avg_leads_per_day || 0}
         subtitle="Compared to last week"
         icon={TrendingUp}

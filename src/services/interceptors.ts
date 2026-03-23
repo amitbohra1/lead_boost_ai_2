@@ -33,7 +33,7 @@ export const applyInterceptors = (axiosInstance: AxiosInstance) => {
 
       if (status === 401) {
         clearSession();
-        window.location.href = "/login";
+        window.location.href = "/";
       }
 
       return Promise.reject(error);

@@ -32,12 +32,12 @@ import {
 import { DeleteConfirmationDialog } from "./modals/delete-confirmation-dialog";
 import { EditRoleDialog } from "./modals/edit-dialog";
 import { FeatureListDialog } from "./modals/feature-list-dialog";
-import { Feature } from "@/interface/interface";
+// import { Feature } from "@/interface/interface";
 import { RoleApiResponse, roleList, useDeleteRole, useEditRole } from "./api";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/redux/store";
-
+import { queryClient } from "@/providers/query-provider";
 
 type Role = {
   id: string;
@@ -107,6 +107,9 @@ export default function RolesList() {
           setEditingRole(null);
           setEditRoleName("");
           toast.success("Role updated successfully");
+          queryClient.invalidateQueries({
+            queryKey: ["roleList"],
+          }); 
         },
       },
     );
@@ -127,6 +130,9 @@ export default function RolesList() {
           setIsDeleteDialogOpen(false);
           setDeletingRole(null);
           toast.success("Role deleted successfully");
+          queryClient.invalidateQueries({
+            queryKey: ["roleList"], 
+          });
         },
       },
     );
@@ -159,7 +165,7 @@ export default function RolesList() {
 
   const uamPermission = features
     ?.find((grp) => grp.feature_grp_name === "UAM")
-    ?.feature_list?.find((f) => f.feature_name === "Roles")?.permission_level;
+    ?.feature_list?.find((f: any) => f.feature_name === "Roles")?.permission_level;
   const canEdit = uamPermission === 3 || uamPermission === 4;
   const canDelete = uamPermission === 4;
   const showPermissionToast = () => {

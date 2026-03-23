@@ -24,6 +24,7 @@ import {
 import { Users, Eye, EyeOff } from "lucide-react";
 import { roleList, useCreateUser, useOrgList } from "../api";
 import { toast } from "sonner";
+import { queryClient } from "@/providers/query-provider";
 
 interface AddUserDialogProps {
   open: boolean;
@@ -187,6 +188,9 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
             return;
           }
           toast.success("User Created successfully");
+          queryClient.invalidateQueries({
+            queryKey: ["usersList"],
+          });
           resetForm();
           onOpenChange(false);
         },
@@ -441,9 +445,7 @@ export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
           </div>
 
           <DialogFooter className="mt-6">
-            <Button type="submit" className="text-text">
-              Create User
-            </Button>
+            <Button type="submit">Create User</Button>
           </DialogFooter>
         </form>
       </DialogContent>

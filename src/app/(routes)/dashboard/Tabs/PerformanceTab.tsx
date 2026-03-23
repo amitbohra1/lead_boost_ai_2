@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
 // import { DemandCategorisationChart } from "../Charts/DemandCategorisationChart"
-import { ModelThreeChart } from "../Charts/ModelThreeChart"
+import { ModelThreeChart } from "../Charts/ModelThreeChart";
 // import { PredictListPriceChart } from "../Charts/PredictListPriceChart"
 
 interface PerformanceTabProps {
-  refreshDemand: number;
+  isLoading: boolean;
 }
 
-export function PerformanceTab({ refreshDemand }: PerformanceTabProps) {
+export function PerformanceTab( { isLoading }: PerformanceTabProps) {
   return (
     <div className="space-y-6">
       {/* Chart 1: Demand Categorisation */}
@@ -23,8 +23,8 @@ export function PerformanceTab({ refreshDemand }: PerformanceTabProps) {
 
       {/* Chart 3: Model Three */}
       <div className="rounded-xl border border-border bg-gradient-to-br from-card to-muted/20 p-6 shadow-sm">
-        <ModelThreeChart refreshDemand={refreshDemand} />
+        <ModelThreeChart isLoadingChart={isLoading} />
       </div>
     </div>
-  )
+  );
 }

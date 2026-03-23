@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Building2 } from "lucide-react";
 import { useCreateOrg } from "../api";
 import { toast } from "sonner";
+import { queryClient } from "@/providers/query-provider";
 
 interface AddOrganizationDialogProps {
   open: boolean;
@@ -71,6 +72,9 @@ export function AddOrganizationDialog({
             return;
           }
           toast.success("Organization created successfully");
+           queryClient.invalidateQueries({
+            queryKey: ["useOrgList"],
+          });
           resetForm();
           onOpenChange(false);
         },
@@ -129,7 +133,7 @@ export function AddOrganizationDialog({
             </div>
           </div>
           <DialogFooter className="mt-6">
-            <Button type="submit" className="text-text">
+            <Button type="submit">
               Create Organization
             </Button>
           </DialogFooter>

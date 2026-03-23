@@ -7,19 +7,6 @@ import {
   EditOrgPayload,
 } from "@/interface/interface";
 
-// interface CreateOrgPayload {
-//   org_name: string;
-// }
-
-// interface EditOrgPayload {
-//   org_id: string;
-//   org_name: string;
-// }
-
-// interface DeleteOrgPayload {
-//   org_id: string;
-// }
-
 interface CreateRolePayload {
   role_name: string;
 }
@@ -105,7 +92,7 @@ export const useTabsList = () => {
     queryFn: async () => {
       const response = await apiRequest("post", "/uam/tabslist", {});
       const resData = response.data;
-      return resData;
+      return resData.response;
     },
     refetchOnWindowFocus: false,
     retry: 1,

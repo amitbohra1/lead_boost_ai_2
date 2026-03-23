@@ -10,13 +10,13 @@ import { useGetDemandCount } from "../api/api";
 import { Spinner } from "@/components/ui/spinner";
 
 interface ModelThreeChartProps {
-  refreshDemand: number;
+  isLoadingChart: boolean;
 }
 
-export function ModelThreeChart({ refreshDemand }: ModelThreeChartProps) {
+export function ModelThreeChart({ isLoadingChart }: ModelThreeChartProps) {
   const theme = useAppSelector(selectTheme);
 
-  const { data, isLoading, isFetching } = useGetDemandCount(refreshDemand);
+  const { data, isLoading } = useGetDemandCount();
 
   const options = useMemo(() => {
     const colors = getChartColors(theme);
@@ -66,9 +66,9 @@ export function ModelThreeChart({ refreshDemand }: ModelThreeChartProps) {
     } as Highcharts.Options;
   }, [theme, data]);
 
-  if (isLoading || isFetching) {
+  if (isLoading || isLoadingChart) {
     return (
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex h-64 items-center justify-center">
         <Spinner />
       </div>
     );

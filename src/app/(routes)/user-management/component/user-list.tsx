@@ -34,7 +34,7 @@ import {
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/redux/store";
-
+import { queryClient } from "@/providers/query-provider";
 
 type User = {
   id: number;
@@ -110,6 +110,7 @@ export default function UserList() {
       },
       {
         onSuccess: (response) => {
+          console.log(response)
           if (response.header.code !== 200) {
                     toast.warning(
                       response?.header.message ||
@@ -119,6 +120,9 @@ export default function UserList() {
                     return;
                   }
           toast.success("User updated successfully");
+           queryClient.invalidateQueries({
+            queryKey: ["usersList"],
+          });
           setIsEditDialogOpen(false);
           setEditingUser(null);
           setEditFirstName("");
@@ -143,6 +147,9 @@ export default function UserList() {
       {
         onSuccess: () => {
           toast.success("User deleted successfully");
+            queryClient.invalidateQueries({
+            queryKey: ["usersList"],
+          });
           setIsDeleteDialogOpen(false);
           setDeletingUser(null);
         },
@@ -152,7 +159,7 @@ export default function UserList() {
 
   const uamPermission = features
     ?.find((grp) => grp.feature_grp_name === "UAM")
-    ?.feature_list?.find((f) => f.feature_name === "Users")?.permission_level;
+    ?.feature_list?.find((f: any) => f.feature_name === "Users")?.permission_level;
   const canEdit = uamPermission === 3 || uamPermission === 4;
   const canDelete = uamPermission === 4;
 

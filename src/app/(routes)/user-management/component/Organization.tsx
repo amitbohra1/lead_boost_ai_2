@@ -28,6 +28,7 @@ import { EditOrganizationDialog } from "./modals/edit-dialog";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/redux/store";
+import { queryClient } from "@/providers/query-provider";
 
 type Organization = {
   org_id: string;
@@ -65,6 +66,9 @@ export default function OrganizationList() {
       {
         onSuccess: () => {
           toast.success("Organization updated successfully");
+           queryClient.invalidateQueries({
+            queryKey: ["useOrgList"],
+          });
           setIsEditDialogOpen(false);
           setEditingOrg(null);
           setEditName("");
@@ -96,6 +100,9 @@ export default function OrganizationList() {
           }
 
           toast.success("Organization deleted successfully");
+           queryClient.invalidateQueries({
+            queryKey: ["useOrgList"],
+          });
           setIsDeleteDialogOpen(false);
           setDeletingOrg(null);
         },
@@ -110,7 +117,7 @@ export default function OrganizationList() {
   const uamPermission = features
     ?.find((grp) => grp.feature_grp_name === "UAM")
     ?.feature_list?.find(
-      (f) => f.feature_name === "Organizations",
+      (f: any) => f.feature_name === "Organizations",
     )?.permission_level;
   const canEdit = uamPermission === 3 || uamPermission === 4;
   const canDelete = uamPermission === 4;

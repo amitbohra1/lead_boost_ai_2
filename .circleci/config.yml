@@ -73,13 +73,17 @@ jobs:
           command: |
             ssh -o StrictHostKeyChecking=no root@154.12.117.217 "
               cd /var/www/nextjs-app &&
+
+              export NODE_ENV=production &&
+
               git pull origin main &&
               npm install &&
+              rm -rf .next &&
               npm run build &&
-              pkill node || true &&
+              pkill -9 node || true &&
               nohup npm start > output.log 2>&1 &
-            "
-
+              "
+              
 workflows:
   deploy:
     jobs:

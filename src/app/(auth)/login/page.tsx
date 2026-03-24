@@ -206,10 +206,6 @@ export default function Login() {
             </Button>
           </form>
         </div>
-
-        <div className="text-center mt-8 text-xs text-muted-foreground font-mono">
-          Secure Connection • End-to-End Encrypted
-        </div>
       </div>
     </div>
   );

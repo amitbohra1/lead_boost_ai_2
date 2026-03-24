@@ -71,24 +71,33 @@ jobs:
       - run:
           name: Deploy to VPS
           command: |
-            ssh -o StrictHostKeyChecking=no root@154.12.117.217 << 'EOF'
+            ssh -o StrictHostKeyChecking=no root@154.12.117.217 
               cd /var/www/nextjs-app
 
               export NODE_ENV=production
 
+              echo "Pull latest code"
               git pull origin main
 
+              echo "Install dependencies"
               npm install
 
+              echo "Clean old build"
               rm -rf .next
 
+              echo "Build project"
               npm run build
 
+              echo "Stop old app"
               pkill -9 node || true
 
+              echo "Start new app"
               nohup npm start > output.log 2>&1 &
-            EOF
 
+              echo "Check running process"
+              sleep 2
+              lsof -i :3000 || true
+            
 workflows:
   deploy:
     jobs:

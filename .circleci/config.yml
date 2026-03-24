@@ -71,7 +71,7 @@ jobs:
       - run:
           name: Deploy to VPS
           command: |
-            ssh -o StrictHostKeyChecking=no root@123.12.102.224 << 'EOF'
+            ssh -o StrictHostKeyChecking=no root@154.12.117.217 << 'EOF'
               cd /var/www/nextjs-app
 
               export NODE_ENV=production

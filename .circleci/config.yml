@@ -122,7 +122,8 @@ jobs:
               git pull origin main &&
 
               rm -rf node_modules .next &&
-              npm install &&
+              npm install --include=dev &&
+
               npm run build &&
 
               pm2 delete nextjs-app || true &&

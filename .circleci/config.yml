@@ -54,48 +54,6 @@
 #               only: main
 
 
-# version: 2.1
-
-# jobs:
-#   deploy:
-#     docker:
-#       - image: cimg/node:18.18
-
-#     steps:
-#       - checkout
-
-#       - add_ssh_keys:
-#           fingerprints:
-#             - "SHA256:mKwcyqjePxsIsylsINA6aTxk7TPRZR9hnmAvo8OjtHY circleci"
-
-#       - run:
-#           name: Deploy to VPS
-#           command: |
-#             ssh -o StrictHostKeyChecking=no root@154.12.117.217 "
-#               cd /var/www/nextjs-app &&
-
-#               export NODE_ENV=production &&
-
-#               git pull origin main &&
-#               npm install &&
-#               rm -rf .next &&
-#               npm run build &&
-#               pkill -9 node || true &&
-#               nohup npm start > output.log 2>&1 &
-#               "
-              
-# workflows:
-#   deploy:
-#     jobs:
-#       - deploy:
-#           filters:
-#             branches:
-#               only:
-#                 - main
-
-
-# new with pm2 
-
 version: 2.1
 
 jobs:
@@ -111,32 +69,21 @@ jobs:
             - "SHA256:mKwcyqjePxsIsylsINA6aTxk7TPRZR9hnmAvo8OjtHY circleci"
 
       - run:
-          name: Deploy to VPS with PM2
+          name: Deploy to VPS
           command: |
             ssh -o StrictHostKeyChecking=no root@154.12.117.217 "
               cd /var/www/nextjs-app &&
 
               export NODE_ENV=production &&
-              export ENCRYPTION_KEY=${ENCRYPTION_KEY} &&
 
-              git reset --hard HEAD &&
               git pull origin main &&
-
-              # 🔥 fix lock issue
-              pkill -f 'next build' || true &&
+              npm install &&
               rm -rf .next &&
-              rm -f .next/lock &&
-
-              npm install --include=dev &&
-
-              npm run build || exit 1 &&
-
-              pm2 delete nextjs-app || true &&
-              pm2 start npm --name 'nextjs-app' -- run start &&
-
-              pm2 save
-            "
-
+              npm run build &&
+              pkill -9 node || true &&
+              nohup npm start > output.log 2>&1 &
+              "
+              
 workflows:
   deploy:
     jobs:
@@ -145,3 +92,52 @@ workflows:
             branches:
               only:
                 - main
+
+
+# new with pm2 
+
+# version: 2.1
+
+# jobs:
+#   deploy:
+#     docker:
+#       - image: cimg/node:18.18
+
+#     steps:
+#       - checkout
+
+#       - add_ssh_keys:
+#           fingerprints:
+#             - "SHA256:mKwcyqjePxsIsylsINA6aTxk7TPRZR9hnmAvo8OjtHY circleci"
+
+#       - run:
+#           name: Deploy to VPS with PM2
+#           command: |
+#             ssh -o StrictHostKeyChecking=no root@154.12.117.217 "
+#               cd /var/www/nextjs-app &&
+
+#               export NODE_ENV=production &&
+
+#               git pull origin main &&
+#               npm install &&
+#               npm run build &&
+
+#               pm2 describe nextjs-app > /dev/null
+              
+#               if [ $? -eq 0 ]; then
+#                 pm2 restart nextjs-app
+#               else
+#                 pm2 start npm --name 'nextjs-app' -- start
+#               fi
+
+#               pm2 save
+#             "
+
+# workflows:
+#   deploy:
+#     jobs:
+#       - deploy:
+#           filters:
+#             branches:
+#               only:
+#                 - main

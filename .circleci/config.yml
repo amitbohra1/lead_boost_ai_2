@@ -117,12 +117,16 @@ jobs:
               cd /var/www/nextjs-app &&
 
               export NODE_ENV=production &&
-              export ENCRYPTION_KEY=${w3@r37hebe5773@m} &&
+              export ENCRYPTION_KEY=${ENCRYPTION_KEY} &&
 
               git reset --hard HEAD &&
               git pull origin main &&
 
-              rm -rf node_modules .next &&
+              # 🔥 fix lock issue
+              pkill -f 'next build' || true &&
+              rm -rf .next &&
+              rm -f .next/lock &&
+
               npm install --include=dev &&
 
               npm run build || exit 1 &&

@@ -124,7 +124,8 @@ jobs:
               rm -rf .next &&
               npm run build &&
 
-              pm2 reload nextjs-app || pm2 start npm --name 'nextjs-app' -- start
+              pm2 delete nextjs-app || true &&
+              pm2 start npm --name 'nextjs-app' -- run start &&
 
               pm2 save
             "

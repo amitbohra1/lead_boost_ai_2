@@ -118,10 +118,11 @@ jobs:
 
               export NODE_ENV=production &&
 
+              git reset --hard HEAD &&
               git pull origin main &&
-              npm install &&
 
-              rm -rf .next &&
+              rm -rf node_modules .next &&
+              npm install &&
               npm run build &&
 
               pm2 delete nextjs-app || true &&

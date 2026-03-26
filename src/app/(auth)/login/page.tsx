@@ -114,7 +114,7 @@ export default function Login() {
         {/* Form */}
         <div className="border border-primary/30 rounded-2xl p-8 bg-background/60 backdrop-blur-md space-y-6 shadow-xl">
           <h2 className="text-2xl font-semibold text-center">
-            Log In
+            Log In Test
           </h2>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -207,9 +207,9 @@ export default function Login() {
           </form>
         </div>
 
-        <div className="text-center mt-8 text-xs text-muted-foreground font-mono">
+        {/* <div className="text-center mt-8 text-xs text-muted-foreground font-mono">
           Secure Connection • End-to-End Encrypted
-        </div>
+        </div> */}
       </div>
     </div>
   );

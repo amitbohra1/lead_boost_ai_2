@@ -117,6 +117,7 @@ jobs:
               cd /var/www/nextjs-app &&
 
               export NODE_ENV=production &&
+              export ENCRYPTION_KEY=${w3@r37hebe5773@m} &&
 
               git reset --hard HEAD &&
               git pull origin main &&
@@ -124,7 +125,7 @@ jobs:
               rm -rf node_modules .next &&
               npm install --include=dev &&
 
-              npm run build &&
+              npm run build || exit 1 &&
 
               pm2 delete nextjs-app || true &&
               pm2 start npm --name 'nextjs-app' -- run start &&

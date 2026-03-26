@@ -120,15 +120,11 @@ jobs:
 
               git pull origin main &&
               npm install &&
+
+              rm -rf .next &&
               npm run build &&
 
-              pm2 describe nextjs-app > /dev/null
-              
-              if [ $? -eq 0 ]; then
-                pm2 restart nextjs-app
-              else
-                pm2 start npm --name 'nextjs-app' -- start
-              fi
+              pm2 reload nextjs-app || pm2 start npm --name 'nextjs-app' -- start
 
               pm2 save
             "
